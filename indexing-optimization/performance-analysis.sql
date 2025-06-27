@@ -1,3 +1,6 @@
+USE TechStore;
+GO
+
 -- Enable query plan output
 SET SHOWPLAN_ALL ON;
 GO

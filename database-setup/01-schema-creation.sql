@@ -1,5 +1,47 @@
--- Enable foreign key constraints
-PRAGMA foreign_keys = ON;
+USE TechStore;
+GO
+
+-- Drop tables if they exist (in reverse dependency order)
+IF OBJECT_ID('order_items', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE order_items;
+END
+GO
+IF OBJECT_ID('reviews', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE reviews;
+END
+GO
+IF OBJECT_ID('orders', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE orders;
+END
+GO
+IF OBJECT_ID('products', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE products;
+END
+GO
+IF OBJECT_ID('users', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE users;
+END
+GO
+IF OBJECT_ID('customers', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE customers;
+END
+GO
+IF OBJECT_ID('categories', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE categories;
+END
+GO
+IF OBJECT_ID('suppliers', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE suppliers;
+END
+GO
 
 -- Customers table
 CREATE TABLE customers (
@@ -14,12 +56,14 @@ CREATE TABLE customers (
     zip_code NVARCHAR(20),
     created_at DATETIME DEFAULT GETDATE()
 );
+GO
 
 -- Categories table
 CREATE TABLE categories (
     category_id INT IDENTITY(1,1) PRIMARY KEY,
     category_name NVARCHAR(100) NOT NULL UNIQUE
 );
+GO
 
 -- Suppliers table
 CREATE TABLE suppliers (
@@ -29,6 +73,7 @@ CREATE TABLE suppliers (
     contact_email NVARCHAR(100),
     contact_phone NVARCHAR(20)
 );
+GO
 
 -- Products table
 CREATE TABLE products (
@@ -43,6 +88,7 @@ CREATE TABLE products (
     FOREIGN KEY (category_id) REFERENCES categories(category_id),
     FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
 );
+GO
 
 -- Orders table
 CREATE TABLE orders (
@@ -53,6 +99,7 @@ CREATE TABLE orders (
     total_amount DECIMAL(18,2),
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
+GO
 
 -- Order Items table
 CREATE TABLE order_items (
@@ -64,6 +111,7 @@ CREATE TABLE order_items (
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
+GO
 
 -- Reviews table
 CREATE TABLE reviews (
@@ -76,6 +124,7 @@ CREATE TABLE reviews (
     FOREIGN KEY (product_id) REFERENCES products(product_id),
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
+GO
 
 -- Users table (for authentication)
 CREATE TABLE users (
@@ -85,3 +134,4 @@ CREATE TABLE users (
     role NVARCHAR(50) NOT NULL,
     created_at DATETIME DEFAULT GETDATE()
 );
+GO

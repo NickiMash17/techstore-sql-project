@@ -1,3 +1,6 @@
+USE TechStore;
+GO
+
 -- Table for stock log
 IF OBJECT_ID('stock_log', 'U') IS NULL
 CREATE TABLE stock_log (
@@ -10,6 +13,8 @@ CREATE TABLE stock_log (
 GO
 
 -- Trigger: Decrease stock when a new order_item is inserted
+IF OBJECT_ID('trg_decrease_stock_after_order', 'TR') IS NOT NULL DROP TRIGGER trg_decrease_stock_after_order;
+GO
 CREATE TRIGGER trg_decrease_stock_after_order
 ON order_items
 AFTER INSERT
@@ -23,6 +28,8 @@ END;
 GO
 
 -- Trigger: Prevent negative stock on products
+IF OBJECT_ID('trg_prevent_negative_stock', 'TR') IS NOT NULL DROP TRIGGER trg_prevent_negative_stock;
+GO
 CREATE TRIGGER trg_prevent_negative_stock
 ON products
 AFTER UPDATE
@@ -37,6 +44,8 @@ END;
 GO
 
 -- Trigger: Log stock changes
+IF OBJECT_ID('trg_log_stock_change', 'TR') IS NOT NULL DROP TRIGGER trg_log_stock_change;
+GO
 CREATE TRIGGER trg_log_stock_change
 ON products
 AFTER UPDATE
