@@ -1,137 +1,84 @@
-USE TechStore;
-GO
-
--- Drop tables if they exist (in reverse dependency order)
-IF OBJECT_ID('order_items', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE order_items;
-END
-GO
-IF OBJECT_ID('reviews', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE reviews;
-END
-GO
-IF OBJECT_ID('orders', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE orders;
-END
-GO
-IF OBJECT_ID('products', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE products;
-END
-GO
-IF OBJECT_ID('users', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE users;
-END
-GO
-IF OBJECT_ID('customers', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE customers;
-END
-GO
-IF OBJECT_ID('categories', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE categories;
-END
-GO
-IF OBJECT_ID('suppliers', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE suppliers;
-END
-GO
-
 -- Customers table
-CREATE TABLE customers (
-    customer_id INT IDENTITY(1,1) PRIMARY KEY,
-    first_name NVARCHAR(50) NOT NULL,
-    last_name NVARCHAR(50) NOT NULL,
-    email NVARCHAR(100) UNIQUE NOT NULL,
-    phone NVARCHAR(20),
-    address NVARCHAR(200),
-    city NVARCHAR(50),
-    state NVARCHAR(50),
-    zip_code NVARCHAR(20),
-    created_at DATETIME DEFAULT GETDATE()
+CREATE TABLE IF NOT EXISTS customers (
+    customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    phone TEXT,
+    address TEXT,
+    city TEXT,
+    state TEXT,
+    zip_code TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-GO
 
 -- Categories table
-CREATE TABLE categories (
-    category_id INT IDENTITY(1,1) PRIMARY KEY,
-    category_name NVARCHAR(100) NOT NULL UNIQUE
+CREATE TABLE IF NOT EXISTS categories (
+    category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category_name TEXT NOT NULL UNIQUE
 );
-GO
 
 -- Suppliers table
-CREATE TABLE suppliers (
-    supplier_id INT IDENTITY(1,1) PRIMARY KEY,
-    supplier_name NVARCHAR(100) NOT NULL,
-    contact_name NVARCHAR(100),
-    contact_email NVARCHAR(100),
-    contact_phone NVARCHAR(20)
+CREATE TABLE IF NOT EXISTS suppliers (
+    supplier_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    supplier_name TEXT NOT NULL,
+    contact_name TEXT,
+    contact_email TEXT,
+    contact_phone TEXT
 );
-GO
 
 -- Products table
-CREATE TABLE products (
-    product_id INT IDENTITY(1,1) PRIMARY KEY,
-    product_name NVARCHAR(100) NOT NULL,
-    description NVARCHAR(500),
-    price DECIMAL(18,2) NOT NULL,
-    stock_quantity INT NOT NULL,
-    category_id INT,
-    supplier_id INT,
-    created_at DATETIME DEFAULT GETDATE(),
+CREATE TABLE IF NOT EXISTS products (
+    product_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_name TEXT NOT NULL,
+    description TEXT,
+    price REAL NOT NULL,
+    stock_quantity INTEGER NOT NULL,
+    category_id INTEGER,
+    supplier_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(category_id),
     FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
 );
-GO
 
 -- Orders table
-CREATE TABLE orders (
-    order_id INT IDENTITY(1,1) PRIMARY KEY,
-    customer_id INT NOT NULL,
-    order_date DATETIME DEFAULT GETDATE(),
-    status NVARCHAR(50) NOT NULL,
-    total_amount DECIMAL(18,2),
+CREATE TABLE IF NOT EXISTS orders (
+    order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status TEXT NOT NULL,
+    total_amount REAL,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
-GO
 
 -- Order Items table
-CREATE TABLE order_items (
-    order_item_id INT IDENTITY(1,1) PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price DECIMAL(18,2) NOT NULL,
+CREATE TABLE IF NOT EXISTS order_items (
+    order_item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    price REAL NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
-GO
 
 -- Reviews table
-CREATE TABLE reviews (
-    review_id INT IDENTITY(1,1) PRIMARY KEY,
-    product_id INT NOT NULL,
-    customer_id INT NOT NULL,
-    rating INT CHECK(rating >= 1 AND rating <= 5),
-    review_text NVARCHAR(1000),
-    review_date DATETIME DEFAULT GETDATE(),
+CREATE TABLE IF NOT EXISTS reviews (
+    review_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER NOT NULL,
+    customer_id INTEGER NOT NULL,
+    rating INTEGER CHECK(rating >= 1 AND rating <= 5),
+    review_text TEXT,
+    review_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(product_id),
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
-GO
 
 -- Users table (for authentication)
-CREATE TABLE users (
-    user_id INT IDENTITY(1,1) PRIMARY KEY,
-    username NVARCHAR(50) UNIQUE NOT NULL,
-    password_hash NVARCHAR(255) NOT NULL,
-    role NVARCHAR(50) NOT NULL,
-    created_at DATETIME DEFAULT GETDATE()
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-GO
