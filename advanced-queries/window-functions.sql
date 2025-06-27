@@ -15,8 +15,8 @@ FROM (
     SELECT c.customer_id, c.first_name, c.last_name, SUM(o.total_amount) AS total_spent
     FROM customers c
     LEFT JOIN orders o ON c.customer_id = o.customer_id
-    GROUP BY c.customer_id
-);
+    GROUP BY c.customer_id, c.first_name, c.last_name
+) AS customer_totals;
 
 -- Running total of order amounts by order date
 SELECT order_id, order_date, total_amount,
