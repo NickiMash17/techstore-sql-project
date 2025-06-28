@@ -2,7 +2,7 @@
 
 [![SQLite](https://img.shields.io/badge/Database-SQLite-blue)](https://www.sqlite.org/index.html) [![VS Code](https://img.shields.io/badge/Editor-VS%20Code-blue)](https://code.visualstudio.com/)
 
-A comprehensive SQL database system for "TechStore," an e-commerce platform, implemented in **SQLite** using standard SQL. This project covers all fundamental and advanced SQL concepts including database design, normalization, complex queries, triggers, indexing, and security—all in a portable, file-based database.
+A comprehensive SQL database system for "TechStore," an e-commerce platform, implemented in **SQLite** using standard SQL. This project demonstrates practical, real-world database design, normalization, advanced queries, indexing, and security—all in a portable, file-based database.
 
 ---
 
@@ -11,7 +11,7 @@ A comprehensive SQL database system for "TechStore," an e-commerce platform, imp
 - [Learning Objectives](#learning-objectives)
 - [Project Structure](#project-structure)
 - [How to Run](#how-to-run)
-- [Screenshots](#screenshots)
+- [Example Outputs](#example-outputs)
 - [Technologies Used](#technologies-used)
 - [Resources](#resources)
 - [License](#license)
@@ -43,21 +43,30 @@ A comprehensive SQL database system for "TechStore," an e-commerce platform, imp
 ├── basic-operations/         # Basic queries and data manipulation
 ├── advanced-queries/         # Joins, aggregates, subqueries, window functions
 ├── documentation/            # ER diagrams, normalization, advanced docs
-├── scripts/                  # (Optional) Backup and utility scripts
-├── tests/                    # (Optional) Test scripts
+├── scripts/                  # Backup and utility scripts
+├── tests/                    # Test scripts
 ├── techstore.db              # SQLite database file
 ```
 
 ## ▶️ How to Run
 1. **Install the SQLite extension in VS Code** (e.g., "SQLite" by Alex Covizzi)
-2. **Create or open `techstore.db`** in your project folder
-3. **Run `database-setup/01-schema-creation.sql`** to create all tables
-4. **Run `database-setup/02-data-insertion.sql`** to insert sample data
-5. **Run `indexing-optimization/index-creation.sql`** to create indexes
-6. **Run any query or manipulation script to demo features**
+2. **Open or create `techstore.db`** in your project folder
+3. **Run these scripts in order:**
+   - `database-setup/01-schema-creation.sql`
+   - `database-setup/02-data-insertion.sql`
+   - `indexing-optimization/index-creation.sql`
+4. **Explore and run queries** in the `basic-operations/` and `advanced-queries/` folders
 
-## 🖼️ Screenshots
-> _Add screenshots of your database, query results, or ER diagrams here!_
+## 🖼️ Example Outputs
+- **ER Diagram:** See `documentation/er-diagram.md` for a visual overview of the schema.
+- **Sample Query:**
+  ```sql
+  SELECT c.first_name, c.last_name, SUM(o.total_amount) AS total_spent
+  FROM customers c
+  INNER JOIN orders o ON c.customer_id = o.customer_id
+  GROUP BY c.first_name, c.last_name;
+  ```
+- **Performance Analysis:** See `documentation/performance-optimization.md` for index usage and query plans.
 
 ## 🛠️ Technologies Used
 - **Database:** SQLite (file-based, standard SQL)
